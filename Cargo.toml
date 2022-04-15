@@ -42,4 +42,4 @@ debug-assertions = true
 debug = true
 
 [patch.crates-io]
-ark-std = { git = "https://github.com/FindoraNetwork/ark-std", branch = "develop-refactoring" }
+ark-std = { git = "https://github.com/FindoraNetwork/ark-std" }
