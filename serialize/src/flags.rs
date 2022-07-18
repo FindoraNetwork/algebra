@@ -52,7 +52,7 @@ impl Flags for EmptyFlags {
     }
 
     #[inline]
-    fn from_u8(value: u8) -> Option<Self> {
+    fn from_u8(_value: u8) -> Option<Self> {
         Some(EmptyFlags)
     }
 }
