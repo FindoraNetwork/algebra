@@ -53,11 +53,7 @@ impl Flags for EmptyFlags {
 
     #[inline]
     fn from_u8(value: u8) -> Option<Self> {
-        if (value >> 7) == 0 {
-            Some(EmptyFlags)
-        } else {
-            None
-        }
+        Some(EmptyFlags)
     }
 }
 
