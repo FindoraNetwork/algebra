@@ -342,7 +342,7 @@ macro_rules! impl_Fp {
                     let flag_location = output_byte_size - 1;
 
                     // At which byte is the flag located in the last limb?
-                    let flag_location_in_last_limb = flag_location - (8 * ($limbs - 1));
+                    let flag_location_in_last_limb = flag_location.checked_sub(8 * ($limbs - 1)).unwrap_or(0);
 
                     // Take all but the last 9 bytes.
                     let last_bytes = &mut result_bytes[8 * ($limbs - 1)..];
