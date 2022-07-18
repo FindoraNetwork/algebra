@@ -13,9 +13,8 @@ macro_rules! impl_prime_field_serializer {
                 }
 
                 // Calculate the number of bytes required to represent a field element
-                // serialized with `flags`. If `F::BIT_SIZE < 8`,
-                // this is at most `$byte_size + 1`
-                let output_byte_size = buffer_byte_size(P::MODULUS_BITS as usize + F::BIT_SIZE);
+                // serialized with `flags`.
+                let output_byte_size = Self::zero().serialized_size_with_flags::<F>();
 
                 // Write out `self` to a temporary buffer.
                 // The size of the buffer is $byte_size + 1 because `F::BIT_SIZE`
@@ -64,9 +63,8 @@ macro_rules! impl_prime_field_serializer {
                     return Err(SerializationError::NotEnoughSpace);
                 }
                 // Calculate the number of bytes required to represent a field element
-                // serialized with `flags`. If `F::BIT_SIZE < 8`,
-                // this is at most `$byte_size + 1`
-                let output_byte_size = buffer_byte_size(P::MODULUS_BITS as usize + F::BIT_SIZE);
+                // serialized with `flags`.
+                let output_byte_size = Self::zero().serialized_size_with_flags::<F>();
 
                 let mut masked_bytes = [0; $byte_size + 1];
                 reader.read_exact(&mut masked_bytes[..output_byte_size])?;
@@ -330,15 +328,15 @@ macro_rules! impl_Fp {
                     result_bytes.iter_mut().zip(bytes).for_each(|(result, input)| {
                         *result = *input;
                     });
+
                     // This mask retains everything in the last limb
                     // that is below `P::MODULUS_BITS`.
-                    let last_limb_mask = (u64::MAX >> P::REPR_SHAVE_BITS).to_le_bytes();
+                    let last_limb_mask = (u64::MAX.checked_shr(P::REPR_SHAVE_BITS).unwrap_or(0)).to_le_bytes();
                     let mut last_bytes_mask = [0u8; 9];
                     last_bytes_mask[..8].copy_from_slice(&last_limb_mask);
 
-
                     // Length of the buffer containing the field element and the flag.
-                    let output_byte_size = buffer_byte_size(P::MODULUS_BITS as usize + F::BIT_SIZE);
+                    let output_byte_size = Self::zero().serialized_size_with_flags::<F>();
                     // Location of the flag is the last byte of the serialized
                     // form of the field element.
                     let flag_location = output_byte_size - 1;
